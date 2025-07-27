@@ -20,9 +20,9 @@ or if you're on windows:
   > go build -o ..\scanner.exe .
 
 Then run the scanner program on the same directory where denstv_hosts.txt is placed
-  $ ./scanner
+  $ ./scanner -checkstream
 
 or if you're on windows:
-  > .\scanner.exe
+  > .\scanner.exe -checkstream
 
 output will be saved to denstv.m3u8, which could be loaded with an IPTV client.
