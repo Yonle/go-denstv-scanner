@@ -1,4 +1,4 @@
-This is the rewrite of the previous denstv-scanner in go, Which scan available channel from dens.tv including Premium ones.
+This is the go rewrite of the previous denstv-scanner, Which scan available channel from dens.tv including Premium ones.
 
 The code inside is only used for educational purpose and not intended for commercial use.
 We are not responsible for any risk when you use this script and the scan results.
