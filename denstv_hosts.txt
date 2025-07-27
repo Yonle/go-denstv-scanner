@@ -1,9 +1,3 @@
 https://op-group1-swiftservehd-1.dens.tv
-https://op-group2-swiftservehd-1.dens.tv
 https://op-group1-swiftservesd-1.dens.tv
 https://op-group2-swiftservesd-1.dens.tv
-http://rr.dens.tv
-http://rr1.dens.tv
-http://rr2.dens.tv
-http://rr3.dens.tv
-http://rrelshinta.dens.tv
