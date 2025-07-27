@@ -1,0 +1,28 @@
+This is the rewrite of the previous denstv-scanner in go, Which scan available channel from dens.tv including Premium ones.
+
+The code inside is only used for educational purpose and not intended for commercial use.
+We are not responsible for any risk when you use this script and the scan results.
+
+You could use this code, with exceptions:
+- Warranty
+- Liability
+
+Scanning
+======== 
+You will need a go compiler, Which you could download at https://go.dev or via respective package manager (if you're on Linux/BSD/*nix)
+
+Start by compiling first:
+  $ cd src/
+  $ go build -o ../scanner .
+
+or if you're on windows:
+  > cd src/
+  > go build -o ..\scanner.exe .
+
+Then run the scanner program on the same directory where denstv_hosts.txt is placed
+  $ ./scanner
+
+or if you're on windows:
+  > .\scanner.exe
+
+output will be saved to denstv.m3u8, which could be loaded with an IPTV client.
