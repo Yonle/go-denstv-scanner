@@ -25,8 +25,8 @@ func scanUrl(wg *sync.WaitGroup, w chan string, urls []string, name string) {
 	defer wg.Done()
 	for i, url := range urls {
 		if checkUrl(url+"/index.m3u8", 400, 10) {
-			insertM3u(w, fmt.Sprintf("%s CH%03d", name, i), url+"/index.m3u8")
-			log.Println("+", url)
+			wg.Add(1)
+			go check(wg, w, i, url, name)
 		} else {
 			log.Println(" ", url)
 		}

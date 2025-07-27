@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
@@ -9,10 +10,11 @@ import (
 	"time"
 )
 
-var thread = 4
+var checkStream bool
+var outputFile string
+var hostsFile string
 
 var hc = http.Client{Timeout: 5 * time.Second}
-var q = make(chan int, 4)
 var b = sync.Pool{
 	New: func() any {
 		return make([]byte, 64)
@@ -20,9 +22,22 @@ var b = sync.Pool{
 }
 
 func main() {
-	hoststxt, err := os.ReadFile("denstv_hosts.txt")
+	var helpCmd bool
+	flag.BoolVar(&checkStream, "checkstream", false, "check the stream before saving. some channels might be skipped")
+	flag.StringVar(&outputFile, "output", "denstv.m3u8", "m3u8 result output filename")
+	flag.StringVar(&hostsFile, "hosts", "denstv_hosts.txt", "path to denstv_hosts.txt or similar.")
+	flag.BoolVar(&helpCmd, "help", false, "show this.")
+
+	flag.Parse()
+
+	if helpCmd {
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	hoststxt, err := os.ReadFile(hostsFile)
 	if err != nil {
-		fmt.Println("I couldn't access denstv_hosts.txt on the current directory.")
+		fmt.Printf("I couldn't access %s on the current directory: %v\n", hostsFile, err)
 		os.Exit(1)
 		return
 	}
@@ -38,15 +53,19 @@ func main() {
 	urls := makeUrls(activeHosts, types)
 
 	w := make(chan string)
-	go makeFile(w, "denstv.m3u8")
+	go makeFile(w, outputFile)
 
 	fmt.Println("Now scanning...")
 	scan(w, urls)
 
 	close(w)
-	fmt.Println("Done. Result saved to denstv.m3u8")
-	fmt.Println("Please note that some channels might be not able to load")
-	fmt.Println("When that happens, All you need to do is just go to the next channel.")
+	fmt.Println("Done. Result saved to", outputFile)
+
+	if !checkStream {
+		fmt.Println("Please note that some channels might be not able to load")
+		fmt.Println("When that happens, All you need to do is just go to the next channel.")
+		fmt.Println("\nOr rerun this program with -checkstream flag.")
+	}
 }
 
 func makeUrls(hosts, types []string) (urls map[string][]string) {
@@ -69,6 +88,10 @@ func makeUrls(hosts, types []string) (urls map[string][]string) {
 
 func checkHosts(hosts []string) (activeHosts []string) {
 	for _, host := range hosts {
+		if len(host) == 0 {
+			continue
+		}
+
 		if checkUrl(host, 500, 0) {
 			activeHosts = append(activeHosts, host)
 			fmt.Println("--  OK:", host)
@@ -115,4 +138,3 @@ func makeFile(w chan string, fn string) {
 
 	return
 }
-
