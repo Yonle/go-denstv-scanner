@@ -13,7 +13,7 @@ import (
 func check(wg *sync.WaitGroup, w chan string, ch int, url, name string) {
 	defer wg.Done()
 	if !checkStream || checkM3U8Status(url+"/index.m3u8") {
-		insertM3u(w, fmt.Sprintf("%s CH%03d", name, ch), url+"/index.m3u8")
+		insertM3u(w, name, fmt.Sprintf("%s CH%03d", name, ch), url+"/index.m3u8")
 		log.Println("+", url)
 	} else {
 		log.Println("-", url)
