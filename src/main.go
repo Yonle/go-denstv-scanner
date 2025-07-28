@@ -13,6 +13,7 @@ import (
 var checkStream bool
 var outputFile string
 var hostsFile string
+var endpointsFile string
 
 var hc = HTTPClient{
 	UserAgent: "Mozilla/5.0 (X11; Linux x86_64)",
@@ -29,7 +30,8 @@ func main() {
 	var helpCmd bool
 	flag.BoolVar(&checkStream, "checkstream", false, "check the stream before saving. some channels might be skipped")
 	flag.StringVar(&outputFile, "output", "denstv.m3u8", "m3u8 result output filename")
-	flag.StringVar(&hostsFile, "hosts", "denstv_hosts.txt", "path to denstv_hosts.txt or similar.")
+	flag.StringVar(&hostsFile, "hosts", "denstv_hosts.txt", "path to denstv_hosts.txt or similar")
+	flag.StringVar(&endpointsFile, "endpoints", "denstv_endpoints.txt", "path to denstv_endpoints.txt or similar")
 	flag.BoolVar(&helpCmd, "help", false, "show this.")
 
 	flag.Parse()
@@ -46,7 +48,15 @@ func main() {
 		return
 	}
 
+	endpointstxt, err := os.ReadFile(endpointsFile)
+	if err != nil {
+		fmt.Printf("I couldn't access %s on the current directory: %v\n", endpointsFile, err)
+		os.Exit(1)
+		return
+	}
+
 	hosts := strings.Split(string(hoststxt), "\n")
+	endpoints := strings.Split(string(endpointstxt), "\n")
 
 	fmt.Println("Checking for host health...")
 
@@ -60,7 +70,7 @@ func main() {
 	go makeFile(w, outputFile)
 
 	fmt.Println("Now scanning...")
-	scan(w, urls)
+	scan(w, urls, endpoints)
 
 	close(w)
 	fmt.Println("Done. Result saved to", outputFile)
