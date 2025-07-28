@@ -10,8 +10,8 @@ func prepareM3u(w chan string) {
 
 func insertM3u(w chan string, group, name, url string) {
 	w <- fmt.Sprintf("#EXTINF:-1 group-title=\"%s\",%s\n", group, name)
-	w <- "#EXTVLCOPT:http-referrer=https://dens.tv\n"
-	w <- "#EXTVLCOPT:http-user-agent=Mozilla/5.0 (X11; Linux x86_64)\n"
+	w <- fmt.Sprintf("#EXTVLCOPT:http-referer=%s\n", hc.Referer)
+	w <- fmt.Sprintf("#EXTVLCOPT:http-user-agent=%s\n", hc.UserAgent)
 	w <- "#KODIPROP:inputstream=inputstream.adaptive\n"
 	w <- "#KODIPROP:inputstreamaddon=inputstream.adaptive\n"
 	w <- "#KODIPROP:inputstream.adaptive.manifest_type=hls\n"
