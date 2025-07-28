@@ -16,7 +16,7 @@ var hostsFile string
 
 var hc = HTTPClient{
 	UserAgent: "Mozilla/5.0 (X11; Linux x86_64)",
-	Referer:   "https://dens.tv",
+	Referer:   "https://www.dens.tv",
 	Client:    http.Client{Timeout: 5 * time.Second},
 }
 var b = sync.Pool{
