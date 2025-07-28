@@ -9,11 +9,12 @@ func prepareM3u(w chan string) {
 }
 
 func insertM3u(w chan string, group, name, url string) {
-	w <- fmt.Sprintf("#EXTINF:-1 group-title=\"%s\",%s\n", group, name)
-	w <- fmt.Sprintf("#EXTVLCOPT:http-referer=%s\n", hc.Referer)
-	w <- fmt.Sprintf("#EXTVLCOPT:http-user-agent=%s\n", hc.UserAgent)
-	w <- "#KODIPROP:inputstream=inputstream.adaptive\n"
-	w <- "#KODIPROP:inputstreamaddon=inputstream.adaptive\n"
-	w <- "#KODIPROP:inputstream.adaptive.manifest_type=hls\n"
-	w <- url + "\n"
+	m3uinfo := fmt.Sprintf("#EXTINF:-1 group-title=\"%s\",%s\n", group, name)
+	m3uinfo += fmt.Sprintf("#EXTVLCOPT:http-referer=%s\n", hc.Referer)
+	m3uinfo += fmt.Sprintf("#EXTVLCOPT:http-user-agent=%s\n", hc.UserAgent)
+	m3uinfo += "#KODIPROP:inputstream=inputstream.adaptive\n"
+	m3uinfo += "#KODIPROP:inputstreamaddon=inputstream.adaptive\n"
+	m3uinfo += "#KODIPROP:inputstream.adaptive.manifest_type=hls\n"
+	m3uinfo += url + "\n"
+	w <- m3uinfo
 }
