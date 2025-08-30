@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -55,8 +56,8 @@ func main() {
 		return
 	}
 
-	hosts := strings.Split(string(hoststxt), "\n")
-	endpoints := strings.Split(string(endpointstxt), "\n")
+	hosts := strings.Split(removeR(hoststxt), "\n")
+	endpoints := strings.Split(removeR(endpointstxt), "\n")
 
 	fmt.Println("Checking for host health...")
 
@@ -120,6 +121,7 @@ func checkHosts(hosts []string) (activeHosts []string) {
 func checkUrl(u string, maxStatusCode, maxLen int) bool {
 	resp, err := hc.Get(u)
 	if err != nil {
+		log.Printf("Failed to fetch %s: %v", u, err)
 		return false
 	}
 
@@ -133,7 +135,7 @@ func checkUrl(u string, maxStatusCode, maxLen int) bool {
 	buf := b.Get().([]byte)
 	defer b.Put(buf)
 
-	n, err := resp.Body.Read(buf)
+	n, _ := resp.Body.Read(buf)
 
 	return n >= maxLen
 }
@@ -149,4 +151,8 @@ func makeFile(w chan string, fn string) {
 	}
 
 	f.Close()
+}
+
+func removeR(s []byte) string {
+	return strings.ReplaceAll(string(s), "\r", "")
 }
